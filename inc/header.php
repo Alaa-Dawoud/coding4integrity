@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>WeVote</title>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://bootswatch.com/5/cosmo/bootstrap.min.css">
 </head>
 <body>
 	<?php include 'navbar.php';?>
