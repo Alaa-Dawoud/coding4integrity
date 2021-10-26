@@ -79,12 +79,16 @@
 		</div>
 	</div>
 	<div style="margin-left:25%">
-		<h3><?php echo $program_point;?></h3>
+		<h3 class="pad_top"><?php echo $program_point;?></h3>
 		<?php if ($program_point=='About'):;?>
 			<!--Display the video-->
 			<h4>Display Video about candidate in this area</h4>
 		<?php endif;?>
 		<p><?php echo $program_point_text;?></p>
+		<hr>
+
+
+
 	</div>
 <?php else:;?>
 	<h4><?php echo $msg;?></h4>
