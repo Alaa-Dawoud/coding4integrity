@@ -5,7 +5,7 @@ to use according to user(guest - vote - candidate)
 vote and candidate user will have same navbar
 -->
 
-<?php include 'config/config.php';?>
+
 <?php
 
   //set session for user type
@@ -27,7 +27,7 @@ vote and candidate user will have same navbar
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="<?php echo '/wevote/candidates.php'; ?>">WeVote</a>
+    <a class="navbar-brand" href="/wevote/index.php">WeVote</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -42,20 +42,14 @@ vote and candidate user will have same navbar
             </li>
           <?php endif;?>
           <li class="nav-item">
-            <a class="nav-link" href="/wevote/<?php echo BASE_URL; ?>">Candidates List</a>
+            <a class="nav-link" href="/wevote/candidates.php">Candidates List</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/wevote/wvow">Leaderboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Program critize</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link btn btn-danger" href="#">Appeals</a>
-          </li>
-          <li class="nav-item">
             <form method="POST" action="<?php echo $_SERVER['PHP_SELF'];?>">
-              <button type="submit" name="submit" class="btn btn-secondary">Log Out</button>
+              <button type="submit" name="submit" class="btn btn-secondary" style="color: silver;">Log Out</button>
             </form>
           </li>
         <?php else:;?>
