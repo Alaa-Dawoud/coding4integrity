@@ -2,6 +2,7 @@
 	$query = "
 	SELECT * 
 	FROM comments_replys
+	WHERE is_reply=0
 	";
 	//Get the result
 	$result = mysqli_query($conn, $query);
