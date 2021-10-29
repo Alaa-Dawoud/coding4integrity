@@ -178,7 +178,9 @@ get the comments
 								<source src="<?php echo '/wevote/candidates_appeals/'.$appeals_data["mp3"][$j];?>" type="audio/mpeg">
 								Your browser does not support the audio element.
 							</audio>
-							<p><span style="font-weight: bold;">Appeal Description:</span> <?php echo $candidate_appeals[$i]['body']?></p>
+							<!--get the body of the candidate whose appeal id is the id of the mp3 number because it sotred by appeal id and don't loop over body text from $i variable-->
+							<?php $file_name = pathinfo($appeals_data["mp3"][$j], PATHINFO_FILENAME);?>
+							<p><span style="font-weight: bold;">Appeal Description:</span> <?php echo $appeals[array_search($file_name, array_column($appeals, 'appeal_id'))]['body'];?></p>
 							<!--found an appeal so increase i by 1-->
 							<?php $i+=1;?>
 						<?php endfor;?>
@@ -192,7 +194,9 @@ get the comments
 								<source src="<?php echo '/wevote/candidates_appeals/'.$appeals_data["mp4"][$j];?>" type="video/mp4">
 								Your browser does not support the video tag.
 							</video>
-							<p><span style="font-weight: bold;">Appeal Description:</span> <?php echo $candidate_appeals[$i]['body']?></p>
+							<!--get the body of the candidate whose appeal id is the id of the mp4 number because it sotred by appeal id and don't loop over body text from $i variable-->
+							<?php $file_name = pathinfo($appeals_data["mp4"][$j], PATHINFO_FILENAME);?>
+							<p><span style="font-weight: bold;">Appeal Description:</span> <?php echo $appeals[array_search($file_name, array_column($appeals, 'appeal_id'))]['body'];?></p>
 							<!--found an appeal so increase i by 1-->
 							<?php $i+=1;?>
 						<?php endfor;?>
