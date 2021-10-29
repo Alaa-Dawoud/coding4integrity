@@ -90,21 +90,32 @@ and also session for comment owner
 
 
 
-
-
-
 <!--
 get the comments
 -->
 <?php include 'config/comments_queries.php';?>
 <?php
-	//echo var_dump(isset($_SESSION['candidate'])?$_SESSION['user_type']:'voter');
-	
+
 	$num_comments = count($comments);
 
 	
 	
 ?>
+
+
+<!--appeals form-->
+<?php
+	if(filter_has_var(INPUT_POST, 'submit_appeal') and isset($_SESSION['user_type'])){
+		//get form data
+		if(!empty($_POST['submit_appeal_body']) and $_FILES["fileToUpload"]["tmp_name"]!=""){
+			require 'config/add_appeals.php';
+		}else{
+			echo 'please submit all required fields';
+		}
+	}
+?>
+
+
 <?php if($id_exist):;?>
 	<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:22%;">
 		<div class="container">
@@ -127,113 +138,71 @@ get the comments
 			<h3 class="pad_top"><?php echo $program_point;?></h3>
 			<?php if ($program_point=='About'):;?>
 				<!--Display the video-->
-				<h4>Display Video about candidate in this area</h4>
+				<video width="900" height="480" controls>
+					<source src="<?php echo '/wevote/candidates_data/can1.mp4';?>" type="video/mp4">
+					Your browser does not support the video tag.
+				</video>
 			<?php endif;?>
 			<p><?php echo $program_point_text;?></p>
 			<hr>
+			<?php include 'comments_section.php';?>
 		<?php else:;?>
 			<h3 class="pad_top">Appeals</h3>
 			<p><?php echo $program_point_text;?></p>
-			<?php if($candidate['num_appeals']!=0):;?>
-				<!--Display appeals here-->
-
-			<?php endif;?>
-		<?php endif;?>
-		<!--comments form-->
-		
-		<?php $form_sub = isset($_GET['submit'])?'?submit='.$_GET['submit'].'&updated_id='.$id : '?updated_id='.$id; ?>
-		<form method="POST" action="<?php echo $_SERVER['PHP_SELF'].$form_sub;?>">
-			<div class="form-group">
-				<textarea name="comment" class="form-control"></textarea>
-			</div>
-			<br>
-			<button type="submit" name="submit_comment" class="btn btn-primary">Add Comment</button>
-		</form>
-		<h2>Comments:</h2>
-		<!--loop over comments and replys-->
-		<?php for($i=0;$i<$num_comments;$i++):; ?>
-			<?php 
-				require 'config/db.php';
-				//replys
-				$query = "
-				SELECT name
-				FROM users
-				WHERE id='".$comments[$i]['id']."'
-				";
-
-				//Get the result
-				$result = mysqli_query($conn, $query);
-				//fetch the data
-				$comment_name = mysqli_fetch_assoc($result);
-				//free result
-				mysqli_free_result($result);
-				//close connnection
-				mysqli_close($conn);
-
-			?>
-			<p style="font-weight:bold;margin-bottom: 0px;"><?php echo $comment_name['name'].' '. date('d/m/Y h:i:sa', $comments[$i]['created_at']);?></p>
-			<!--Display comment-->
-			<p><?php echo $comments[$i]['body'];?></p>
-			<!--Get replys here-->
-
-			<!--replys form-->
-			<form method="POST" action="<?php echo $_SERVER['PHP_SELF'].$form_sub.'&updated_id='.$id;?>" style="margin-left: 60px;">
+			<!--Form to add appeal-->
+			<?php $form_sub = isset($_GET['submit'])?'?submit='.$_GET['submit'].'&updated_id='.$id : '?updated_id='.$id; ?>
+			<form method="POST" action="<?php echo $_SERVER['PHP_SELF'].$form_sub;?>" enctype="multipart/form-data">
 				<div class="form-group">
-					<textarea name="reply" class="form-control"></textarea>
+			      <label for="formFile" class="form-label mt-4">Choose File</label>
+			      <input name="fileToUpload" class="form-control" type="file" id="formFile">
+			    </div>
+				<div class="form-group">
+					<label>Add description of appeal</label>
+					<textarea name="submit_appeal_body" class="form-control"></textarea>
 				</div>
 				<br>
-				<input type="hidden" name="reply_to_comment" value="<?php echo $comments[$i]['comment_id'];?>">
-				<button type="submit" name="submit_reply" class="btn btn-primary">Add Reply</button>
+				<button type="submit" name="submit_appeal" class="btn btn-danger">Add Appeal</button>
 			</form>
+			<?php if($candidate['num_appeals']!=0):;?>
+				<!--Display appeals here-->
+				<!--loop over appeals-->
 
-			<?php 
-				require 'config/db.php';
-				//replys
-				$query = "
-				SELECT * 
-				FROM comments_replys
-				WHERE to_candidate='".$_GET['updated_id']."' and program_point='".strtolower($program_point)."' and is_reply=1 and comment_id='".$comments[$i]['comment_id']."'
-				ORDER BY created_at DESC
-				";
-
-				//Get the result
-				$result = mysqli_query($conn, $query);
-				//fetch the data
-				$replys = mysqli_fetch_all($result, MYSQLI_ASSOC);
-				//free result
-				mysqli_free_result($result);
-				//close connnection
-				mysqli_close($conn);
-
-			?>
-			<!--loop over replys-->
-			<h4 style="margin-left: 60px;">Replys:</h4>
-			<?php for($j=0;$j<count($replys);$j++):;?>
-				<?php 
-				require 'config/db.php';
-				//replys
-				$query = "
-				SELECT name
-				FROM users
-				WHERE id='".$replys[$j]['id']."'
-				";
-
-				//Get the result
-				$result = mysqli_query($conn, $query);
-				//fetch the data
-				$reply_name = mysqli_fetch_assoc($result);
-				//free result
-				mysqli_free_result($result);
-				//close connnection
-				mysqli_close($conn);
-
-				?>
-				<p style="font-weight:bold;margin-left: 60px;margin-bottom: 0px;"><?php echo $reply_name['name'].' '. date('d/m/Y h:i:sa', $replys[$i]['created_at']);?></p>
-				<p style="margin-left: 60px;"><?php echo $replys[$j]['body'];?></p>
-			<?php endfor;?>
-			<hr>
-		<?php endfor;?>
-
+				<?php include 'config/get_appeals.php';?>
+				<?php for($i=0;$i<$candidate['num_appeals'];$i++):;?>
+					<!--check mp3 appeals-->
+					<?php if(count($appeals_data["mp3"])!=0): ;?>
+						<h3>MP3 Appeals</h3>
+						<?php for($j=0;$j<count($appeals_data["mp3"]);$j++):;?>
+							<h4>Appeal <?php echo $i+1;?></h4>
+							<audio controls>
+								<source src="<?php echo '/wevote/candidates_appeals/'.$appeals_data["mp3"][$j];?>" type="audio/mpeg">
+								Your browser does not support the audio element.
+							</audio>
+							<p><span style="font-weight: bold;">Appeal Description:</span> <?php echo $candidate_appeals[$i]['body']?></p>
+							<!--found an appeal so increase i by 1-->
+							<?php $i+=1;?>
+						<?php endfor;?>
+					<?php endif;?>
+					<!--check mp4 appeals-->
+					<?php if(count($appeals_data["mp4"])!=0): ;?>
+						<h3>MP4 Appeals</h3>
+						<?php for($j=0;$j<count($appeals_data["mp4"]);$j++):;?>
+							<h4>Appeal <?php echo $i+1;?></h4>
+							<video width="320" height="240" controls>
+								<source src="<?php echo '/wevote/candidates_appeals/'.$appeals_data["mp4"][$j];?>" type="video/mp4">
+								Your browser does not support the video tag.
+							</video>
+							<p><span style="font-weight: bold;">Appeal Description:</span> <?php echo $candidate_appeals[$i]['body']?></p>
+							<!--found an appeal so increase i by 1-->
+							<?php $i+=1;?>
+						<?php endfor;?>
+					<?php endif;?>
+				<?php endfor;?>
+				<hr>
+				<?php include 'comments_section.php';?>
+			<?php endif;?>
+		<?php endif;?>
+		
 	</div>
 <?php else:;?>
 	<h4><?php echo $msg;?></h4>
