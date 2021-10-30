@@ -45,7 +45,7 @@ vote and candidate user will have same navbar
             <a class="nav-link" href="/wevote/candidates.php">Candidates List</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/wevote/wvow">Leaderboard</a>
+            <a class="nav-link" href="/wevote/leaderboard.php?submit=nappeals">Leaderboard</a>
           </li>
           <li class="nav-item">
             <form method="POST" action="<?php echo $_SERVER['PHP_SELF'];?>">
